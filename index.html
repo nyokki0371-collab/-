@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>経穴学習Webアプリ</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- ヘッダーエリア -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="meridian-selector-container">
+          <label for="meridian-select" class="sr-only">経脈選択</label>
+          <select id="meridian-select" class="meridian-select">
+            <!-- JavaScriptで動的生成 -->
+          </select>
+        </div>
+        
+        <div class="total-count-quiz">
+          <input type="number" id="meridian-count-input" class="count-input" placeholder="" min="0" max="99">
+          <span class="unit">穴</span>
+          <span id="count-result" class="count-result"></span>
+        </div>
+
+        <button type="button" id="open-help-btn" class="help-btn" title="使い方を見る">
+          <span class="icon">?</span> 使い方
+        </button>
+      </div>
+
+      <!-- モード切り替えタブ -->
+      <nav class="mode-tabs">
+        <button type="button" class="tab-btn active" data-mode="1">モード1<br><span class="tab-sub">経穴名</span></button>
+        <button type="button" class="tab-btn" data-mode="2">モード2<br><span class="tab-sub">所在・属性</span></button>
+        <button type="button" class="tab-btn" data-mode="3">モード3<br><span class="tab-sub">総合</span></button>
+      </nav>
+
+      <!-- 難易度切り替えセグメント (モード2, 3 のみ表示) -->
+      <div id="difficulty-container" class="difficulty-container hidden">
+        <div class="difficulty-title">難易度</div>
+        <div class="difficulty-selector">
+          <button type="button" class="diff-btn active" data-diff="normal">
+            <span class="diff-name">通常</span>
+            <span class="diff-score">60点</span>
+          </button>
+          <button type="button" class="diff-btn" data-diff="hard">
+            <span class="diff-name">ハード</span>
+            <span class="diff-score">80点</span>
+          </button>
+          <button type="button" class="diff-btn" data-diff="super-hard">
+            <span class="diff-name">スーパーハード</span>
+            <span class="diff-score">100点</span>
+          </button>
+        </div>
+        <div id="difficulty-desc" class="difficulty-desc">
+          <!-- JSで切り替え説明メッセージを注入 -->
+        </div>
+      </div>
+    </header>
+
+    <!-- メインコンテンツ (経穴問題テーブル/カードリスト) -->
+    <main class="app-main">
+      <div class="table-wrapper">
+        <table class="keiketsu-table">
+          <thead>
+            <tr>
+              <th class="col-kaname5">五要穴<br>属性</th>
+              <th class="col-guyu">五兪穴<br>属性</th>
+              <th class="col-name">経穴名</th>
+              <th class="col-location">経穴の所在</th>
+            </tr>
+          </thead>
+          <tbody id="keiketsu-list">
+            <!-- JavaScriptで問題行を動的に挿入 -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- アクションボタンエリア -->
+      <div class="action-bar">
+        <button type="button" id="submit-btn" class="submit-btn">回答する</button>
+        <button type="button" id="reset-btn" class="reset-btn">もう一度挑戦</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- 初回使い方説明モーダル -->
+  <div id="help-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>経穴学習アプリ 使い方ガイド</h2>
+        <button type="button" id="close-help-btn" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <section class="help-section">
+          <h3>① 3つの学習モード</h3>
+          <ul>
+            <li><strong>経穴名トレーニング</strong>：属性と所在が表示されます。経穴の名前と正しい並び順を覚えます。</li>
+            <li><strong>所在・属性トレーニング</strong>：経穴名が表示されます。五要穴・五兪穴属性と所在の空欄を答えます。</li>
+            <li><strong>総合トレーニング</strong>：すべての要素（経穴名・属性・所在）を答えます。</li>
+          </ul>
+        </section>
+
+        <section class="help-section">
+          <h3>② 五要穴マスの操作</h3>
+          <p>マスをタップ/クリックするたびに切り替わります：<br>
+          <code>空白 → 原穴 → 郄穴 → 絡穴 → 募穴 → 兪穴 → 空白</code></p>
+        </section>
+
+        <section class="help-section">
+          <h3>③ 五兪穴マスの操作</h3>
+          <p>マスをタップ/クリックするたびに切り替わります：<br>
+          <code>空白 → 井穴 → 滎穴 → 兪穴 → 経穴 → 合穴 → 空白</code></p>
+        </section>
+
+        <section class="help-section">
+          <h3>④ 所在問題と難易度</h3>
+          <ul>
+            <li><strong>通常 (60点目標)</strong>：<code>()</code> で囲まれた部分のみ空欄。経穴は正しい順番。</li>
+            <li><strong>ハード (80点目標)</strong>：<code>()</code> と <code>[]</code> の両方を空欄。経穴は正しい順番。</li>
+            <li><strong>スーパーハード (100点目標)</strong>：<code>()</code> と <code>[]</code> を空欄。<strong>経穴の出題順が完全ランダム！</strong>（経穴名欄に経穴番号をヒント表示）</li>
+          </ul>
+        </section>
+
+        <section class="help-section">
+          <h3>⑤ 採点と判定</h3>
+          <ul>
+            <li>すべての項目に回答してから画面下の<strong>「回答する」</strong>ボタンを押します。</li>
+            <li><span class="text-correct">青文字・✓マーク</span> ＝ 完全正解</li>
+            <li><span class="text-wrong">赤枠・✕マーク</span> ＝ 不正解（正しい回答が表示されます）</li>
+            <li><span class="text-partial">▲ (オレンジ)</span> ＝ 経穴名を「ひらがな」で答えた場合の中間判定</li>
+            <li>画面一番上の「経穴数」問題も忘れずに解答しましょう！</li>
+          </ul>
+        </section>
+      </div>
+      <div class="modal-footer">
+        <label class="dont-show-again">
+          <input type="checkbox" id="dont-show-again-cb">
+          以降、この説明を表示しない
+        </label>
+        <button type="button" id="start-app-btn" class="modal-start-btn">学習をはじめる</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
