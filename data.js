@@ -1596,7 +1596,7 @@ const MERIDIANS = [
         name: "中衝",
         yomi: "ちゅうしょう",
         locationRaw: "中指、(中指)先端中央",
-        subLocationRaw: "爪甲(撓)側縁の垂直線と爪甲基底部の水平線との交点",
+        subLocationRaw: "爪甲(橈)側縁の垂直線と爪甲基底部の水平線との交点",
         kaname5: "",
         guyu: "井穴"
       }
